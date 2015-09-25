@@ -219,6 +219,9 @@ class DateTimeWidget implements WidgetInterface
         }
         try {
             if (is_string($value)) {
+                if (strlen($value) === 4) {
+                    $value .= '-01-01';
+                }
                 $date = new DateTime($value);
             } elseif (is_bool($value)) {
                 $date = new DateTime();
