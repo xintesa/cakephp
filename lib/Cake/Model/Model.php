@@ -1956,10 +1956,14 @@ class Model extends Object implements CakeEventListener {
 				$this->data[$this->alias][$this->primaryKey] = $this->id;
 			}
 
+			$conn = $this->getDataSource()->getConnection();
+			$autoCommit = $conn->getAttribute(PDO::ATTR_AUTOCOMMIT);
+			$conn->setAttribute(PDO::ATTR_AUTOCOMMIT, !$autoCommit);
 			if ($options['callbacks'] === true || $options['callbacks'] === 'after') {
 				$event = new CakeEvent('Model.afterSave', $this, array($created, $options));
 				$this->getEventManager()->dispatch($event);
 			}
+			$conn->setAttribute(PDO::ATTR_AUTOCOMMIT, $autoCommit);
 		}
 
 		if (!empty($this->data)) {
