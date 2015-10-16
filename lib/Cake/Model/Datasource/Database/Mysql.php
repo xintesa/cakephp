@@ -825,6 +825,39 @@ class Mysql extends DboSource {
 	}
 
 /**
+ * @inheritdoc
+ */
+	public function begin() {
+		$result = parent::begin();
+		if ($result) {
+			$this->_connection->setAttribute(PDO::ATTR_AUTOCOMMIT, false);
+		}
+		return $result;
+	}
+
+/**
+ * @inheritdoc
+ */
+	public function commit() {
+		$result = parent::commit();
+		if ($result) {
+			$this->_connection->setAttribute(PDO::ATTR_AUTOCOMMIT, true);
+		}
+		return $result;
+	}
+
+/**
+ * @inheritdoc
+ */
+	public function rollback() {
+		$result = parent::rollback();
+		if ($result) {
+			$this->_connection->setAttribute(PDO::ATTR_AUTOCOMMIT, true);
+		}
+		return $result;
+	}
+
+/**
  * Check if column type is unsigned
  *
  * @param string $real Real database-layer column type (i.e. "varchar(255)")
