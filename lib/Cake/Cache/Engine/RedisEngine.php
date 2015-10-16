@@ -98,6 +98,7 @@ class RedisEngine extends CacheEngine {
 		if ($this->settings['password'] && !$this->_Redis->auth($this->settings['password'])) {
 			return false;
 		}
+		$this->_Redis->client('setname', get_class($this));
 		return $this->_Redis->select($this->settings['database']);
 	}
 
