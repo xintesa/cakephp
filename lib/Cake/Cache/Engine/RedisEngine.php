@@ -113,6 +113,11 @@ class RedisEngine extends CacheEngine {
 		if (!is_int($value)) {
 			$value = serialize($value);
 		}
+
+		if (!$this->_Redis->isConnected()) {
+			$this->_connect();
+		}
+
 		if ($duration === 0) {
 			return $this->_Redis->set($key, $value);
 		}
@@ -128,11 +133,11 @@ class RedisEngine extends CacheEngine {
  */
 	public function read($key) {
 		$value = $this->_Redis->get($key);
-		if (ctype_digit($value)) {
-			$value = (int)$value;
+		if (preg_match('/^[-]?\d+$/', $value)) {
+			return (int)$value;
 		}
 		if ($value !== false && is_string($value)) {
-			$value = unserialize($value);
+			return unserialize($value);
 		}
 		return $value;
 	}

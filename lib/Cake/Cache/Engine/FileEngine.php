@@ -109,7 +109,7 @@ class FileEngine extends CacheEngine {
  * @return bool True if the data was successfully cached, false on failure
  */
 	public function write($key, $data, $duration) {
-		if ($data === '' || !$this->_init) {
+		if (!$this->_init) {
 			return false;
 		}
 
@@ -132,7 +132,7 @@ class FileEngine extends CacheEngine {
 		}
 
 		$expires = time() + $duration;
-		$contents = $expires . $lineBreak . $data . $lineBreak;
+		$contents = implode(array($expires, $lineBreak, $data, $lineBreak));
 
 		if ($this->settings['lock']) {
 			$this->_File->flock(LOCK_EX);
